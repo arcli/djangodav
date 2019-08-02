@@ -128,7 +128,7 @@ class DummyWriteFSDavResource(BaseFSDavResource):
         if temp_file:
             # move temp file (e.g., coming from nginx)
             shutil.move(temp_file, self.get_abs_path())
-        elif range_start == None:
+        elif range_start is None:
             # open binary file and write to disk
             with open(self.get_abs_path(), 'wb') as dst:
                 shutil.copyfileobj(request, dst)

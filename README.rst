@@ -89,7 +89,7 @@ Basic Authentication on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Be careful when using Basic Authentication on Windows, as it is not enabled by default (for non SSL sites). You can
-either set ``BasicAuthLevel`` to ``2`` in the `Windows Registry <http://www.windowspage.de/tipps/022703.html>`_ , or
+either set the registry parameter ``BasicAuthLevel`` to ``2`` in ``HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\WebClient\Parameters`` - see `this help article <http://www.windowspage.de/tipps/022703.html>`_ - or
 just make sure your site uses SSL and has a valid SSL certificate.
 
 
@@ -219,7 +219,7 @@ This example is a bit more complex, as it requires two Django models and some ha
 
         root = "/path/to/folder"
 
-        def write(self, request, temp_file=None):
+        def write(self, request, temp_file=None, range_start=None):
             size = len(request.body)
 
             # calculate a hashsum of the request (ToDo: probably need to replace this with SHA1 or such, and maybe add a salt)
