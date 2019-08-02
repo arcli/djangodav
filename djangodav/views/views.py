@@ -303,6 +303,7 @@ class DavView(TemplateView):
             return self.no_access()
         created = not self.resource.exists
 
+        file_name_forwarding = None
         # check headers for X-File-Name (temp file upload)
         if DJANGODAV_ENABLE_HTTP_X_FILE_NAME:
             file_name_forwarding = request.META.get('HTTP_X_FILE_NAME', None)
