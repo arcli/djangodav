@@ -283,3 +283,16 @@ This example is a bit more complex, as it requires two Django models and some ha
         (r'^dbdav(?P<path>.*)$', DavView.as_view(resource_class=MyFSDavResource, lock_class=DummyLock,
          acl_class=FullAcl)),
     )
+
+
+Settings
+--------
+
+The following Django settings are available:
+
+- `DJANGODAV_X_REDIRECT` (Boolean, Default: False) - enable `X-Accel-Redirect` feature for nginx
+- `DJANGODAV_X_REDIRECT_PREFIX` (String, Default: '') - base path used when `X-Accel-Redirect` is used
+- `DJANGODAV_ENABLE_HTTP_X_FILE_NAME` (Boolean, Default: False) - allow temp-file uploads via the webserver (uses the `X-File-Name` header)
+
+For the nginx/webserver related features, please take a look at nginx configuration in the `DjangoDav example repo <https://github.com/anx-ckreuzberger/djangodav-example-app>`_, e.g.: https://github.com/anx-ckreuzberger/djangodav-example-app/blob/master/docker/nginx/django.conf
+
