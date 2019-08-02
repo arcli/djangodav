@@ -106,7 +106,7 @@ class BaseDBDavResource(BaseDavResource):
         raise NotImplementedError
 
     # ToDo: here it is called `content`, but in our example it is called `request` ... why?
-    def write(self, content, temp_file=None):
+    def write(self, content, temp_file=None, range_start=None):
         raise NotImplementedError
 
     def delete(self):

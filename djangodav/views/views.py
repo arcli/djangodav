@@ -37,6 +37,7 @@ PATTERN_CONTENT_RANGE=re.compile('^\s*bytes\s*([0-9]*)-.*$')
 # get settings
 DJANGODAV_X_REDIRECT = getattr(settings, 'DJANGODAV_X_REDIRECT', None)
 DJANGODAV_X_REDIRECT_PREFIX = getattr(settings, 'DJANGODAV_X_REDIRECT_PREFIX', "")
+DJANGODAV_ENABLE_HTTP_X_FILE_NAME = getattr(settings, 'DJANGODAV_ENABLE_HTTP_X_FILE_NAME', False)
 
 
 class DavView(TemplateView):
@@ -302,16 +303,24 @@ class DavView(TemplateView):
             return self.no_access()
         created = not self.resource.exists
 
-        # check headers for X-File-Name
+        # check headers for X-File-Name (temp file upload)
+        if DJANGODAV_ENABLE_HTTP_X_FILE_NAME:
+            file_name_forwarding = request.META.get('HTTP_X_FILE_NAME', None)
+
+        # check headers for HTTP Content Range (allow partial uploads)
         range = request.META.get('HTTP_CONTENT_RANGE', None)
-        if range == None:
-            range_start=None
+        if range is None:
+            range_start = None
         else:
-            m=PATTERN_CONTENT_RANGE.match(range)
-            if not m: return HttpResponseBadRequest("Invalid Content-Range")
+            m = PATTERN_CONTENT_RANGE.match(range)
+
+            if not m:
+                return HttpResponseBadRequest("Invalid Content-Range")
+
             range_start=int(m[1])
-            
-        self.resource.write(request, range_start=range_start)
+
+        # write the file
+        self.resource.write(request, range_start=range_start, temp_file=file_name_forwarding)
 
         if created:
             self.__dict__['resource'] = self.get_resource(path=self.resource.get_path())
